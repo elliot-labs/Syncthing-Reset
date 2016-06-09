@@ -39,7 +39,7 @@ echo Are you absolutely sure that you want to reset syncthing?
 echo This is your last chance to back out!
 echo.
 choice /c RC /m "Press \"C\" to Confirm or press \"E\" to Exit..."
-if %errorlevel%==1 (goto check
+if %errorlevel%==2 (goto check
 ) else (goto exit)
 
 
@@ -84,30 +84,24 @@ rem Removes the syncthing folder so that the new syncthing files can be installe
 
 :preunpack
 setlocal
-for %%a in ("%cd%\*.zip") do call:unpack "%%a"
+for %%a in ("%cd%\*.zip") do call:UnpackMove "%%a"
 endlocal
-goto move
+goto startprocess
 
 
 rem sends the commands to unpack the users zip file.
 
 
-:unpack
+:UnpackMove
 powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('C:\syncthingtemp\%~nx1', 'C:\syncthingtemp\extracted\'); }"
+xcopy C:\syncthingtemp\extracted\%~n1 C:\Syncthing\
 
 
 rem unzips the specified zip file into a specific folder.
-
-
-:move
-xcopy C:\syncthingtemp\extracted\ C:\syncthing\
-goto start
-
-
 rem Moves the files into position.
 
 
-:start
+:startprocess
 start C:\syncthing\syncthing.exe -no-console -no-browser
 goto cleanup
 
