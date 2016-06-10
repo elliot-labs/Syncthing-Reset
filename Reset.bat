@@ -6,6 +6,9 @@ cd /d %~dp0
 goto vars
 
 
+rem Starts the program with initial settings
+
+
 :vars
 if %PROCESSOR_ARCHITECTURE% == AMD64 (
 set archtype=64 Bit
@@ -21,10 +24,10 @@ rem Checks the processor's archetecture and sets a varible based upon what is fo
 :confirm
 cls
 echo Are you sure that you want to reset Syncthing?
-echo This will cause a disruprion on *this* computer's network syncing!
-echo ONLY do this if you are having an issue with syncthing!!!
+echo This will cause a disruprion on *this* computer's syncing!
+echo ONLY do this if you are having trouble with Syncthing!!!
 echo.
-choice /c RC /m "Press \"R\" to Reset or press \"C\" to Cancle..."
+choice /c RC /m "Press \"R\" to Reset or press \"C\" to Cancel... "
 if %errorlevel%==1 (
 goto doubbleconfirm
 ) else (goto exit)
@@ -38,7 +41,7 @@ cls
 echo Are you absolutely sure that you want to reset syncthing?
 echo This is your last chance to back out!
 echo.
-choice /c RC /m "Press \"C\" to Confirm or press \"E\" to Exit..."
+choice /c EC /m "Press \"E\" to Exit or press \"C\" to Confirm... "
 if %errorlevel%==2 (goto check
 ) else (goto exit)
 
@@ -48,15 +51,19 @@ rem Doubble checks if the user wants to reset syncthing
 
 :check
 cls
-if not exist C:\syncthingtemp\ mkdir C:\syncthingtemp\extracted\
-if not exist C:\syncthingtemp\extracted\ mkdir C:\syncthingtemp\extracted\
+if not exist C:\syncthingtemp\ mkdir C:\syncthingtemp\
 if exist C:\syncthingtemp\syncthing-windows*.zip goto stop
 echo Please download and place the %archtype% Windows version ZIP file
 echo of Syncthing in this folder.
 pause
-start C:\syncthingtemp\
+cls
+echo Place the %archtype% zip file in the file browser that was opened
+echo then press any key to continue.
+echo.
 start https://syncthing.net/
+start C:\syncthingtemp\
 pause
+if not exist C:\syncthingtemp\extracted\ mkdir C:\syncthingtemp\extracted\
 goto check
 
 
@@ -84,20 +91,21 @@ rem Removes the syncthing folder so that the new syncthing files can be installe
 
 :preunpack
 setlocal
-for %%a in ("%cd%\*.zip") do call:UnpackMove "%%a"
+for %%a in ("C:\syncthingtemp\*.zip") do call:UnpackMove "%%a"
 endlocal
 goto startprocess
 
 
-rem sends the commands to unpack the users zip file.
+rem Sends the commands to unpack the users zip file.
 
 
 :UnpackMove
 powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('C:\syncthingtemp\%~nx1', 'C:\syncthingtemp\extracted\'); }"
-xcopy C:\syncthingtemp\extracted\%~n1 C:\Syncthing\
+xcopy /E "C:\syncthingtemp\extracted\%~n1" C:\Syncthing\
+exit /b
 
 
-rem unzips the specified zip file into a specific folder.
+rem Unzips the specified zip file into a specific folder.
 rem Moves the files into position.
 
 
@@ -106,7 +114,7 @@ start C:\syncthing\syncthing.exe -no-console -no-browser
 goto cleanup
 
 
-rem starts the syncthing program in the background.
+rem Starts the syncthing program in the background.
 
 
 :cleanup
@@ -114,7 +122,7 @@ rmdir /S /Q C:\syncthingtemp\
 goto message
 
 
-rem cleans up after the extraction and file manipulation.
+rem Sleans up after the extraction and file manipulation.
 
 
 :message
@@ -130,7 +138,7 @@ rem Tells the user that the program has completed.
 
 :unsupported
 cls
-echo Unfortuneately only Windows 32bit and 64bit x86 compatible version are
+echo Unfortuneately only Windows 32bit and 64bit x86 compatible versions are
 echo supported.
 pause
 goto exit
