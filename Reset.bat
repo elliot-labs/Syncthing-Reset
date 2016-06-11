@@ -10,6 +10,8 @@ rem Starts the program with initial settings
 
 
 :vars
+cls
+echo Getting system information...
 if %PROCESSOR_ARCHITECTURE% == AMD64 (
 set archtype=64 Bit
 goto confirm)
@@ -73,6 +75,8 @@ rem The folder is autocreated if it does not exist.
 
 
 :stop
+cls
+echo Stoping running instances of Syncthing...
 taskkill /IM syncthing.*
 goto clear
 
@@ -81,6 +85,8 @@ rem Closes all instances of Syncthing so that files can be edited.
 
 
 :clear
+cls
+echo Cleaning out Syncthing directory for new files...
 rmdir /S /Q C:\syncthing
 mkdir C:\Syncthing
 goto preunpack
@@ -90,6 +96,8 @@ rem Removes the syncthing folder so that the new syncthing files can be installe
 
 
 :preunpack
+cls
+echo Unpacking and moving files into position...
 setlocal
 for %%a in ("C:\syncthingtemp\*.zip") do call:UnpackMove "%%a"
 endlocal
@@ -100,7 +108,7 @@ rem Sends the commands to unpack the users zip file.
 
 
 :UnpackMove
-powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('C:\syncthingtemp\%~nx1', 'C:\syncthingtemp\extracted\'); }"
+powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem';[IO.Compression.ZipFile]::ExtractToDirectory('C:\syncthingtemp\%~nx1', 'C:\syncthingtemp\extracted\'); }"
 xcopy /E "C:\syncthingtemp\extracted\%~n1" C:\Syncthing\
 exit /b
 
@@ -109,8 +117,106 @@ rem Unzips the specified zip file into a specific folder.
 rem Moves the files into position.
 
 
+:icon
+cls
+echo Creating settings icon...
+if exists "Syncthing Settings.lnk" del "%cd%\Syncthing Settings.lnk"
+(
+echo([{000214A0-0000-0000-C000-000000000046}]
+echo(Prop3=19,2
+echo([InternetShortcut]
+echo(IDList=
+echo(URL=http://127.0.0.1:8384/
+)>"Syncthing Settings.lnk"
+goto schvars
+
+
+rem Deletes existing icon if present in current directory and creates a new settings icon.
+
+
+:schvars
+cls
+echo Creating/resetting scheduled task...
+schtasks /Delete /TN Syncthing /F
+set year=%date:~10,4%
+set month=%date:~4,2%
+set day=%date:~7,2%
+set scripttime=%time:~0,8%
+for /f "delims= " %%a in ('"wmic useraccount where name='%username%' get sid"') do (
+if not "%%a"=="SID" (set usersid=%%a
+goto :createxml))
+
+
+rem Gets varables for XML files and deletes existing scheduled task.
+
+
+:createxml
+(
+echo(<?xml version="1.0" encoding="UTF-16"?>
+echo(<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+echo(  <RegistrationInfo>
+echo(    <Date>%year%-%month%-%day%T%scripttime%</Date>
+echo(    <Author>%computername%\%username%</Author>
+echo(    <Description>Syncthing autostart task</Description>
+echo(    <URI>\Syncthing</URI>
+echo(  </RegistrationInfo>
+echo(  <Triggers>
+echo(    <BootTrigger>
+echo(      <Enabled>true</Enabled>
+echo(    </BootTrigger>
+echo(  </Triggers>
+echo(  <Principals>
+echo(    <Principal id="Author">
+echo(      <UserId>%usersid%</UserId>
+echo(      <LogonType>S4U</LogonType>
+echo(      <RunLevel>LeastPrivilege</RunLevel>
+echo(    </Principal>
+echo(  </Principals>
+echo(  <Settings>
+echo(    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+echo(    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+echo(    <StopIfGoingOnBatteries>true</StopIfGoingOnBatteries>
+echo(    <AllowHardTerminate>false</AllowHardTerminate>
+echo(    <StartWhenAvailable>false</StartWhenAvailable>
+echo(    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
+echo(    <IdleSettings>
+echo(      <StopOnIdleEnd>true</StopOnIdleEnd>
+echo(      <RestartOnIdle>false</RestartOnIdle>
+echo(    </IdleSettings>
+echo(    <AllowStartOnDemand>true</AllowStartOnDemand>
+echo(    <Enabled>true</Enabled>
+echo(    <Hidden>false</Hidden>
+echo(    <RunOnlyIfIdle>false</RunOnlyIfIdle>
+echo(    <WakeToRun>false</WakeToRun>
+echo(    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>
+echo(    <Priority>7</Priority>
+echo(  </Settings>
+echo(  <Actions Context="Author">
+echo(    <Exec>
+echo(      <Command>C:\Syncthing\Syncthing.exe</Command>
+echo(      <Arguments>-no-console -no-browser</Arguments>
+echo(    </Exec>
+echo(  </Actions>
+echo(</Task>
+)>"C:\syncthingtemp\schtsk.xml"
+goto createschtsk
+
+
+rem creates xml file with customized settings for current user
+
+
+:createschtsk
+schtasks /create /xml "C:\syncthingtemp\schtsk.xml"
+goto startprocess
+
+
+rem Creates a new scheduled task for Syncthing auto start
+
+
 :startprocess
-start C:\syncthing\syncthing.exe -no-console -no-browser
+cls
+echo Starting Syncthing...
+schtasks /run /tn Syncthing
 goto cleanup
 
 
@@ -118,6 +224,8 @@ rem Starts the syncthing program in the background.
 
 
 :cleanup
+cls
+echo Cleaning up...
 rmdir /S /Q C:\syncthingtemp\
 goto message
 
