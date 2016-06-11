@@ -152,52 +152,52 @@ rem Gets varables for XML files and deletes existing scheduled task.
 
 :createxml
 (
-echo(<?xml version="1.0" encoding="UTF-16"?>
-echo(<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
-echo(  <RegistrationInfo>
-echo(    <Date>%year%-%month%-%day%T%scripttime%</Date>
-echo(    <Author>%computername%\%username%</Author>
-echo(    <Description>Syncthing autostart task</Description>
-echo(    <URI>\Syncthing</URI>
-echo(  </RegistrationInfo>
-echo(  <Triggers>
-echo(    <BootTrigger>
-echo(      <Enabled>true</Enabled>
-echo(    </BootTrigger>
-echo(  </Triggers>
-echo(  <Principals>
-echo(    <Principal id="Author">
-echo(      <UserId>%usersid%</UserId>
-echo(      <LogonType>S4U</LogonType>
-echo(      <RunLevel>LeastPrivilege</RunLevel>
-echo(    </Principal>
-echo(  </Principals>
-echo(  <Settings>
-echo(    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
-echo(    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
-echo(    <StopIfGoingOnBatteries>true</StopIfGoingOnBatteries>
-echo(    <AllowHardTerminate>false</AllowHardTerminate>
-echo(    <StartWhenAvailable>false</StartWhenAvailable>
-echo(    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
-echo(    <IdleSettings>
-echo(      <StopOnIdleEnd>true</StopOnIdleEnd>
-echo(      <RestartOnIdle>false</RestartOnIdle>
-echo(    </IdleSettings>
-echo(    <AllowStartOnDemand>true</AllowStartOnDemand>
-echo(    <Enabled>true</Enabled>
-echo(    <Hidden>false</Hidden>
-echo(    <RunOnlyIfIdle>false</RunOnlyIfIdle>
-echo(    <WakeToRun>false</WakeToRun>
-echo(    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>
-echo(    <Priority>7</Priority>
-echo(  </Settings>
-echo(  <Actions Context="Author">
-echo(    <Exec>
-echo(      <Command>C:\Syncthing\Syncthing.exe</Command>
-echo(      <Arguments>-no-console -no-browser</Arguments>
-echo(    </Exec>
-echo(  </Actions>
-echo(</Task>
+echo(^<?xml version^="1.0" encoding^="UTF-16"?^>
+echo(^<Task version^="1.2" xmlns^="http://schemas.microsoft.com/windows/2004/02/mit/task"^>
+echo(  ^<RegistrationInfo^>
+echo(    ^<Date^>%year%-%month%-%day%T%scripttime%.1008091^</Date^>
+echo(    ^<Author^>%computername%\%username%^</Author^>
+echo(    ^<Description^>Syncthing autostart task^</Description^>
+echo(    ^<URI^>\Syncthing^</URI^>
+echo(  ^</RegistrationInfo^>
+echo(  ^<Triggers^>
+echo(    ^<BootTrigger^>
+echo(      ^<Enabled^>true^</Enabled^>
+echo(    ^</BootTrigger^>
+echo(  ^</Triggers^>
+echo(  ^<Principals^>
+echo(    ^<Principal id^="Author"^>
+echo(      ^<UserId^>%usersid%^</UserId^>
+echo(      ^<LogonType^>S4U^</LogonType^>
+echo(      ^<RunLevel^>LeastPrivilege^</RunLevel^>
+echo(    ^</Principal^>
+echo(  ^</Principals^>
+echo(  ^<Settings^>
+echo(    ^<MultipleInstancesPolicy^>IgnoreNew^</MultipleInstancesPolicy^>
+echo(    ^<DisallowStartIfOnBatteries^>false^</DisallowStartIfOnBatteries^>
+echo(    ^<StopIfGoingOnBatteries^>true^</StopIfGoingOnBatteries^>
+echo(    ^<AllowHardTerminate^>false^</AllowHardTerminate^>
+echo(    ^<StartWhenAvailable^>false^</StartWhenAvailable^>
+echo(    ^<RunOnlyIfNetworkAvailable^>false^</RunOnlyIfNetworkAvailable^>
+echo(    ^<IdleSettings^>
+echo(      ^<StopOnIdleEnd^>true^</StopOnIdleEnd^>
+echo(      ^<RestartOnIdle^>false^</RestartOnIdle^>
+echo(    ^</IdleSettings^>
+echo(    ^<AllowStartOnDemand^>true^</AllowStartOnDemand^>
+echo(    ^<Enabled^>true^</Enabled^>
+echo(    ^<Hidden^>false^</Hidden^>
+echo(    ^<RunOnlyIfIdle^>false^</RunOnlyIfIdle^>
+echo(    ^<WakeToRun^>false^</WakeToRun^>
+echo(    ^<ExecutionTimeLimit^>PT0S^</ExecutionTimeLimit^>
+echo(    ^<Priority^>7^</Priority^>
+echo(  ^</Settings^>
+echo(  ^<Actions Context^="Author"^>
+echo(    ^<Exec^>
+echo(      ^<Command^>C:\Syncthing\Syncthing.exe^</Command^>
+echo(      ^<Arguments^>-no-console -no-browser^</Arguments^>
+echo(    ^</Exec^>
+echo(  ^</Actions^>
+echo(^</Task^>
 )>"C:\syncthingtemp\schtsk.xml"
 goto createschtsk
 
