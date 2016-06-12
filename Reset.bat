@@ -207,7 +207,7 @@ rem creates xml file with customized settings for current user
 
 
 :createschtsk
-schtasks /create /xml "C:\syncthingtemp\schtsk.xml"
+schtasks /create /TN Syncthing /xml "C:\syncthingtemp\schtsk.xml"
 goto startprocess
 
 
