@@ -167,14 +167,14 @@ echo(    ^<Description^>Syncthing autostart task^</Description^>
 echo(    ^<URI^>\Syncthing^</URI^>
 echo(  ^</RegistrationInfo^>
 echo(  ^<Triggers^>
-echo(    ^<BootTrigger^>
+echo(    ^<LogonTrigger^>
 echo(      ^<Enabled^>true^</Enabled^>
-echo(    ^</BootTrigger^>
+echo(    ^</LogonTrigger^>
 echo(  ^</Triggers^>
 echo(  ^<Principals^>
 echo(    ^<Principal id^="Author"^>
 echo(      ^<UserId^>%usersid%^</UserId^>
-echo(      ^<LogonType^>S4U^</LogonType^>
+echo(      ^<LogonType^>InteractiveToken^</LogonType^>
 echo(      ^<RunLevel^>LeastPrivilege^</RunLevel^>
 echo(    ^</Principal^>
 echo(  ^</Principals^>
