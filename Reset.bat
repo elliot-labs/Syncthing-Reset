@@ -125,13 +125,13 @@ rem Moves the files into position.
 :icon
 cls
 echo Creating settings icon...
-if exist "Syncthing Settings.url" del "%cd%\Syncthing Settings.url"
-if exist "Syncthing Settings.lnk" del "%cd%\Syncthing Settings.lnk"
+if exists "Syncthing Settings.url" del "%cd%\Syncthing Settings.url"
+if exists "Syncthing Settings.lnk" del "%cd%\Syncthing Settings.lnk"
 (
 echo([InternetShortcut]
 echo(URL=http://127.0.0.1:8384/
 echo(IDList=
-echo(IconFile="%systemroot%\system32\shell32.dll"
+echo(IconFile=%systemroot%\system32\shell32.dll
 echo(IconIndex=238
 )>"Syncthing Settings.url"
 goto schvars
