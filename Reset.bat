@@ -106,7 +106,7 @@ echo Unpacking and moving files into position...
 setlocal
 for %%a in ("C:\syncthingtemp\*.zip") do call:UnpackMove "%%a"
 endlocal
-goto schvars
+goto icon
 
 
 rem Sends the commands to unpack the users zip file.
@@ -125,19 +125,19 @@ rem Moves the files into position.
 :icon
 cls
 echo Creating settings icon...
+if exists "Syncthing Settings.url" del "%cd%\Syncthing Settings.url"
 if exists "Syncthing Settings.lnk" del "%cd%\Syncthing Settings.lnk"
 (
-echo([{000214A0-0000-0000-C000-000000000046}]
-echo(Prop3=19,2
 echo([InternetShortcut]
-echo(IDList=
 echo(URL=http://127.0.0.1:8384/
-)>"Syncthing Settings.lnk"
+echo(IDList=
+echo(IconFile=%systemroot%\system32\shell32.dll
+echo(IconIndex=238
+)>"Syncthing Settings.url"
 goto schvars
 
 
 rem Deletes existing icon if present in current directory and creates a new settings icon.
-rem Currently does not work so it is excluded from the execution flow.
 
 
 :schvars
