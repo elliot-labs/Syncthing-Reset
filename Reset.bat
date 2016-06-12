@@ -101,7 +101,7 @@ echo Unpacking and moving files into position...
 setlocal
 for %%a in ("C:\syncthingtemp\*.zip") do call:UnpackMove "%%a"
 endlocal
-goto startprocess
+goto schvars
 
 
 rem Sends the commands to unpack the users zip file.
@@ -132,6 +132,7 @@ goto schvars
 
 
 rem Deletes existing icon if present in current directory and creates a new settings icon.
+rem Currently does not work so it is excluded from the execution flow.
 
 
 :schvars
