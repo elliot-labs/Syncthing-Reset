@@ -1,12 +1,17 @@
-:start
+:init
 @echo off
 color 4f
 cls
 cd /d %~dp0
+net session >nul 2>&1
+if %errorLevel% == 0 (
 goto vars
+) else (
+goto runasadmin
+)
 
 
-rem Starts the program with initial settings
+rem Starts the program with initial settings and checks if the program is being run as admin
 
 
 :vars
@@ -254,6 +259,18 @@ goto exit
 
 
 rem Tells teh user that Syncthing is unsupported on their platform.
+
+
+:runasadmin
+cls
+echo This script needs to be run as admin.
+echo.
+echo To do this, right click on this script and select run as administrator.
+pause
+goto exit
+
+
+rem Displays information to user on how to run this script as admin.
 
 
 :exit
